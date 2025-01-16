@@ -2,7 +2,6 @@ DECLARE
    v_error_code NUMBER;
    v_error_message VARCHAR2(200);
 BEGIN
-   -- Llama al procedimiento para crear un nuevo comerciante
    C##OL_SCHEMA.PKG_MERCHANT.create_merchant(
       p_business_name => 'New Merchant by CRUD',
       p_department => 'Valle del Cauca',
@@ -15,7 +14,6 @@ BEGIN
       o_error_message => v_error_message
    );
 
-   -- Muestra el resultado
    DBMS_OUTPUT.PUT_LINE('Error Code: ' || v_error_code);
    DBMS_OUTPUT.PUT_LINE('Error Message: ' || v_error_message);
 END;

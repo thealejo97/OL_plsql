@@ -11,7 +11,6 @@ DECLARE
    l_total_revenue NUMBER;
    l_total_employees NUMBER;
 BEGIN
-   -- Llama a la función con filtros opcionales
    l_cursor := C##OL_SCHEMA.PKG_MERCHANT.get_merchants(
                   p_name_filter => 'Merchant',
                   p_city_filter => 'Cali',
@@ -21,7 +20,6 @@ BEGIN
 
     DBMS_OUTPUT.PUT_LINE('--- Merchant Full Data ---');
 
-   -- Procesar cada fila del cursor
    LOOP
       FETCH l_cursor INTO 
          l_id, l_business_name, l_department, l_city, 
@@ -29,8 +27,6 @@ BEGIN
          l_total_revenue, l_total_employees;
       EXIT WHEN l_cursor%NOTFOUND;
 
-      -- Mostrar los resultados
-      
       DBMS_OUTPUT.PUT_LINE('ID: ' || l_id);
       DBMS_OUTPUT.PUT_LINE('Business Name: ' || l_business_name);
       DBMS_OUTPUT.PUT_LINE('Department: ' || l_department);
@@ -44,6 +40,5 @@ BEGIN
    END LOOP;
    DBMS_OUTPUT.PUT_LINE('--- End full data ---');
 
-   -- Cerrar el cursor
    CLOSE l_cursor;
 END;
