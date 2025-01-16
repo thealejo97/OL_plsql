@@ -43,7 +43,6 @@ EXCEPTION
 END;
 --------- Audit Triggers ------------
 BEGIN
-   -- Trigger para auditoría en la tabla Merchant
    EXECUTE IMMEDIATE '
       CREATE OR REPLACE TRIGGER trg_merchant_audit
       BEFORE INSERT OR UPDATE ON Merchant
@@ -59,7 +58,6 @@ BEGIN
       END;
    ';
 
-   -- Trigger para auditoría en la tabla Establishment
    EXECUTE IMMEDIATE '
       CREATE OR REPLACE TRIGGER trg_establishment_audit
       BEFORE INSERT OR UPDATE ON Establishment
@@ -75,7 +73,6 @@ BEGIN
       END;
    ';
 
-   -- Trigger para auditoría en la tabla Employee
    EXECUTE IMMEDIATE '
       CREATE OR REPLACE TRIGGER trg_employee_audit
       BEFORE INSERT OR UPDATE ON Employee
