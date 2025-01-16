@@ -1,5 +1,6 @@
 DECLARE
    l_cursor SYS_REFCURSOR;
+   l_id NUMBER;
    l_business_name VARCHAR2(100);
    l_department VARCHAR2(50);
    l_city VARCHAR2(50);
@@ -7,23 +8,30 @@ DECLARE
    l_email VARCHAR2(100);
    l_created_on DATE;
    l_status VARCHAR2(20);
-   l_establish_name VARCHAR2(4000); -- Aumentado para manejar LISTAGG
    l_total_revenue NUMBER;
    l_total_employees NUMBER;
 BEGIN
-   -- Llamar a la función desde el paquete
-   l_cursor := C##OL_SCHEMA.PKG_MERCHANT.get_merchant_by_id(1);
+   -- Llama a la función con filtros opcionales
+   l_cursor := C##OL_SCHEMA.PKG_MERCHANT.get_merchants(
+                  p_name_filter => 'Merchant',
+                  p_city_filter => 'Cali',
+                  p_status_filter => 'Active',
+                  p_offset => 0,
+                  p_limit => 10);
+
+    DBMS_OUTPUT.PUT_LINE('--- Merchant Full Data ---');
 
    -- Procesar cada fila del cursor
    LOOP
       FETCH l_cursor INTO 
-         l_business_name, l_department, l_city, 
+         l_id, l_business_name, l_department, l_city, 
          l_phone, l_email, l_created_on, l_status, 
-         l_establish_name, l_total_revenue, l_total_employees;
+         l_total_revenue, l_total_employees;
       EXIT WHEN l_cursor%NOTFOUND;
 
       -- Mostrar los resultados
-      DBMS_OUTPUT.PUT_LINE('--- Merchant Data ---');
+      
+      DBMS_OUTPUT.PUT_LINE('ID: ' || l_id);
       DBMS_OUTPUT.PUT_LINE('Business Name: ' || l_business_name);
       DBMS_OUTPUT.PUT_LINE('Department: ' || l_department);
       DBMS_OUTPUT.PUT_LINE('City: ' || l_city);
@@ -33,19 +41,9 @@ BEGIN
       DBMS_OUTPUT.PUT_LINE('Status: ' || l_status);
       DBMS_OUTPUT.PUT_LINE('Total Revenue: ' || l_total_revenue);
       DBMS_OUTPUT.PUT_LINE('Total Employees: ' || l_total_employees);
-      DBMS_OUTPUT.PUT_LINE('Establishment Names: ' || l_establish_name);
    END LOOP;
+   DBMS_OUTPUT.PUT_LINE('--- End full data ---');
 
    -- Cerrar el cursor
    CLOSE l_cursor;
-
-   DBMS_OUTPUT.PUT_LINE('Cursor closed successfully.');
-EXCEPTION
-   WHEN OTHERS THEN
-      -- Manejo de errores
-      DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
-      IF l_cursor%ISOPEN THEN
-         CLOSE l_cursor;
-         DBMS_OUTPUT.PUT_LINE('Cursor closed after error.');
-      END IF;
 END;
