@@ -17,4 +17,3 @@ BEGIN
    DBMS_OUTPUT.PUT_LINE('Error Code: ' || v_error_code);
    DBMS_OUTPUT.PUT_LINE('Error Message: ' || v_error_message);
 END;
-/
