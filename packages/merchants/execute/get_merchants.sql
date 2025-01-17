@@ -10,6 +10,7 @@ DECLARE
    l_status VARCHAR2(20);
    l_total_revenue NUMBER;
    l_total_employees NUMBER;
+   l_counter NUMBER := 0;
 BEGIN
    l_cursor := C##OL_SCHEMA.PKG_MERCHANT.get_merchants(
                   p_name_filter => 'Merchant',
@@ -26,7 +27,9 @@ BEGIN
          l_phone, l_email, l_created_on, l_status, 
          l_total_revenue, l_total_employees;
       EXIT WHEN l_cursor%NOTFOUND;
-
+      
+      l_counter := l_counter + 1;
+      DBMS_OUTPUT.PUT_LINE('-------- ' || l_counter || ' --------');
       DBMS_OUTPUT.PUT_LINE('ID: ' || l_id);
       DBMS_OUTPUT.PUT_LINE('Business Name: ' || l_business_name);
       DBMS_OUTPUT.PUT_LINE('Department: ' || l_department);
