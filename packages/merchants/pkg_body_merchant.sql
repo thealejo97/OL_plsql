@@ -66,7 +66,6 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
                              o_error_code OUT NUMBER, 
                              o_error_message OUT VARCHAR2) IS
    BEGIN
-      -- Validación de los parámetros de entrada
       IF p_business_name IS NULL OR LENGTH(p_business_name) > 100 THEN
          o_error_code := 1;
          o_error_message := 'Invalid business name';
@@ -91,11 +90,9 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
          RETURN;
       END IF;
 
-      -- Inserción del nuevo comerciante
       INSERT INTO Merchant (business_name, department, city, phone, email, status, created_on, created_by)
       VALUES (p_business_name, p_department, p_city, p_phone, p_email, p_status, SYSDATE, p_created_by);
 
-      -- Retornar éxito
       o_error_code := 0;
       o_error_message := 'Merchant created successfully';
    EXCEPTION
@@ -103,5 +100,55 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
          o_error_code := -1;
          o_error_message := 'Error creating merchant: ' || SQLERRM;
    END create_merchant;
+
+
+   PROCEDURE update_merchant(p_id IN NUMBER,
+                              p_business_name IN VARCHAR2, 
+                              p_department IN VARCHAR2, 
+                              p_city IN VARCHAR2, 
+                              p_phone IN VARCHAR2, 
+                              p_email IN VARCHAR2, 
+                              p_status IN VARCHAR2, 
+                              p_updated_by IN VARCHAR2,
+                              o_error_code OUT NUMBER, 
+                              o_error_message OUT VARCHAR2) IS
+   BEGIN
+      IF p_id IS NULL THEN
+         o_error_code := 1;
+         o_error_message := 'Merchant ID is required';
+         RETURN;
+      END IF;
+
+      IF p_email IS NOT NULL AND NOT REGEXP_LIKE(p_email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$') THEN
+         o_error_code := 2;
+         o_error_message := 'Invalid email format';
+         RETURN;
+      END IF;
+
+      UPDATE Merchant
+      SET business_name = NVL(p_business_name, business_name),
+            department = NVL(p_department, department),
+            city = NVL(p_city, city),
+            phone = NVL(p_phone, phone),
+            email = NVL(p_email, email),
+            status = NVL(p_status, status),
+            updated_on = SYSDATE,
+            updated_by = p_updated_by
+      WHERE id = p_id;
+
+      IF SQL%ROWCOUNT = 0 THEN
+         o_error_code := 3;
+         o_error_message := 'Merchant not found or no changes made';
+         RETURN;
+      END IF;
+
+      o_error_code := 0;
+      o_error_message := 'Merchant updated successfully';
+   EXCEPTION
+      WHEN OTHERS THEN
+         o_error_code := -1;
+         o_error_message := 'Error updating merchant: ' || SQLERRM;
+   END update_merchant;
+
 END PKG_MERCHANT;
 /

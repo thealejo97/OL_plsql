@@ -14,4 +14,14 @@ CREATE OR REPLACE PACKAGE C##OL_SCHEMA.PKG_MERCHANT IS
                              p_created_by IN VARCHAR2,
                              o_error_code OUT NUMBER, 
                              o_error_message OUT VARCHAR2);
+   PROCEDURE update_merchant(p_id IN NUMBER,
+                          p_business_name IN VARCHAR2, 
+                          p_department IN VARCHAR2, 
+                          p_city IN VARCHAR2, 
+                          p_phone IN VARCHAR2, 
+                          p_email IN VARCHAR2, 
+                          p_status IN VARCHAR2, 
+                          p_updated_by IN VARCHAR2,
+                          o_error_code OUT NUMBER, 
+                          o_error_message OUT VARCHAR2);
 END PKG_MERCHANT;
