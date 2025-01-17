@@ -179,4 +179,31 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
          o_error_message := 'Error deleting merchant: ' || SQLERRM;
    END delete_merchant;
 
+
+   FUNCTION get_report_registered_active_merchants RETURN SYS_REFCURSOR IS
+      l_cursor SYS_REFCURSOR; -- Cursor referenciado
+   BEGIN
+      OPEN l_cursor FOR
+         SELECT 
+            m.business_name AS name,
+            m.department,
+            m.city AS municipality,
+            m.phone,
+            m.email AS email,
+            m.created_on AS registration_date,
+            m.status,
+            COUNT(e.id) AS total_establishments,
+            NVL(SUM(e.revenue), 0) AS total_active,
+            NVL(SUM(e.employee_count), 0) AS total_employees
+         FROM Merchant m
+         LEFT JOIN Establishment e 
+            ON e.merchant_id = m.id
+         WHERE m.status IN ('Registered', 'Active')
+         GROUP BY 
+            m.business_name, m.department, m.city, 
+            m.phone, m.email, m.created_on, m.status
+         ORDER BY COUNT(e.id) DESC;
+
+      RETURN l_cursor; -- Devolvemos el cursor
+   END get_report_registered_active_merchants;
 END PKG_MERCHANT;

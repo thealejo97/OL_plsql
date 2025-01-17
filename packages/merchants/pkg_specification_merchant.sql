@@ -28,4 +28,6 @@ CREATE OR REPLACE PACKAGE C##OL_SCHEMA.PKG_MERCHANT IS
                           o_error_code OUT NUMBER, 
                           o_error_message OUT VARCHAR2);
 
+   FUNCTION get_report_registered_active_merchants RETURN SYS_REFCURSOR;
+
 END PKG_MERCHANT;
