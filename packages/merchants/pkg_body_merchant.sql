@@ -24,6 +24,7 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
       RETURN l_cursor;
    END get_merchant_by_id;
 
+
    FUNCTION get_merchants(p_name_filter IN VARCHAR2 DEFAULT NULL, 
                           p_city_filter IN VARCHAR2 DEFAULT NULL, 
                           p_status_filter IN VARCHAR2 DEFAULT NULL,
@@ -55,6 +56,7 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
 
       RETURN l_cursor;
    END get_merchants;
+
 
    PROCEDURE create_merchant(p_business_name IN VARCHAR2, 
                              p_department IN VARCHAR2, 
@@ -150,5 +152,31 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
          o_error_message := 'Error updating merchant: ' || SQLERRM;
    END update_merchant;
 
+
+   PROCEDURE delete_merchant(p_id IN NUMBER, 
+                             o_error_code OUT NUMBER, 
+                             o_error_message OUT VARCHAR2) IS
+   BEGIN
+      IF p_id IS NULL THEN
+         o_error_code := 1;
+         o_error_message := 'Merchant ID is required';
+         RETURN;
+      END IF;
+
+      DELETE FROM Merchant WHERE id = p_id;
+
+      IF SQL%ROWCOUNT = 0 THEN
+         o_error_code := 2;
+         o_error_message := 'Merchant not found';
+         RETURN;
+      END IF;
+
+      o_error_code := 0;
+      o_error_message := 'Merchant deleted successfully';
+   EXCEPTION
+      WHEN OTHERS THEN
+         o_error_code := -1;
+         o_error_message := 'Error deleting merchant: ' || SQLERRM;
+   END delete_merchant;
+
 END PKG_MERCHANT;
-/

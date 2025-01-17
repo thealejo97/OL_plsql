@@ -24,4 +24,8 @@ CREATE OR REPLACE PACKAGE C##OL_SCHEMA.PKG_MERCHANT IS
                           p_updated_by IN VARCHAR2,
                           o_error_code OUT NUMBER, 
                           o_error_message OUT VARCHAR2);
+   PROCEDURE delete_merchant(p_id IN NUMBER, 
+                          o_error_code OUT NUMBER, 
+                          o_error_message OUT VARCHAR2);
+
 END PKG_MERCHANT;
