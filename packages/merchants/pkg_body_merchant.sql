@@ -181,7 +181,7 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
 
 
    FUNCTION get_report_registered_active_merchants RETURN SYS_REFCURSOR IS
-      l_cursor SYS_REFCURSOR; -- Cursor referenciado
+      l_cursor SYS_REFCURSOR; 
    BEGIN
       OPEN l_cursor FOR
          SELECT 
@@ -204,6 +204,6 @@ CREATE OR REPLACE PACKAGE BODY C##OL_SCHEMA.PKG_MERCHANT IS
             m.phone, m.email, m.created_on, m.status
          ORDER BY COUNT(e.id) DESC;
 
-      RETURN l_cursor; -- Devolvemos el cursor
+      RETURN l_cursor;
    END get_report_registered_active_merchants;
 END PKG_MERCHANT;
